@@ -1,4 +1,4 @@
-package com.example.tempsign.fragments;
+package com.example.tempsign;
 
 import android.content.Context;
 import android.os.Build;
@@ -14,8 +14,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-
-import com.example.tempsign.R;
 
 /**
  * A simple {@link Fragment} subclass.
