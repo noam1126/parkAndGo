@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/pagebkg"
+    android:orientation="vertical"
+    tools:context=".fragments.fragmentParkingLot">
+
+    <SearchView
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="30px"
+        android:layout_marginTop="30px"
+        android:layout_marginRight="30px"
+        android:layout_marginBottom="30px"
+        android:layout_weight="1.2"
+        android:background="@drawable/lavender_border"
+        android:backgroundTint="#FFFFFF"
+        android:imeOptions="actionSearch"
+        android:inputType="text|textMultiLine"
+        android:layoutDirection="rtl" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/resview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1" />
+
+</LinearLayout>

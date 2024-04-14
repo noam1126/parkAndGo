@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "369606962523",
+    "project_id": "temppro-62d12",
+    "storage_bucket": "temppro-62d12.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369606962523:android:91dbc8dc7095b6764dfe7e",
+        "android_client_info": {
+          "package_name": "com.example.tempsign"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaeozge_fbyP2h3oEwTuaW0wJPLp6mwi0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
