@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         return true;
     }
 
-    /*@Override
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id=item.getItemId();
         if(id==R.id.star){
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
             Toast.makeText(this,"heart",Toast.LENGTH_SHORT).show();
         }
         return true;
-    }*/
+    }
 
     @Override
     public void navigateToInfoParking(View v) {

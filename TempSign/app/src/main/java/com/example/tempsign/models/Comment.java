@@ -1,4 +1,4 @@
-package com.example.myapplication.models;
+package com.example.tempsign.models;
 
 public class Comment {
     public String commentText;
