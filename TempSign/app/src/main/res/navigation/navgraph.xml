@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/fragmentInfoParking"
-        android:name="com.example.myapplication.fragmentInfoParking"
+        android:name="com.example.tempsign.fragmentInfoParking"
         android:label="fragment_info_parking"
         tools:layout="@layout/fragment_info_parking" />
 
     <fragment
         android:id="@+id/fragmentParkingLot"
-        android:name="com.example.myapplication.fragments.fragmentParkingLot"
+        android:name="com.example.tempsign.fragments.fragmentParkingLot"
         android:label="fragment_parking_lot"
         tools:layout="@layout/fragment_parking_lot">
         <action

@@ -38,7 +38,7 @@ public class SignUp extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(SignUp.this,"now you are signed up please sign in",Toast.LENGTH_LONG).show();
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Intent intent = new Intent(SignUp.this, MainActivity.class);
+                            Intent intent = new Intent(SignUp.this, SignIn.class);
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
