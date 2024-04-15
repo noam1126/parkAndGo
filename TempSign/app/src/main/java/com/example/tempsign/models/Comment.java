@@ -3,29 +3,24 @@ package com.example.tempsign.models;
 public class Comment {
     public String commentText;
     public String date;
-    public String time;
-    public String userId;
+    public String userName;
+    public int likeNum;
 
-    public Comment() {
-    }
+    public String getCommentText() { return commentText; }
 
-    public Comment(String commentText, String date,  String time, String userId) {
+    public String getDate() { return date; }
+
+    public String getUserName() { return userName; }
+
+    public int getLikeNum() { return likeNum; }
+
+
+    public Comment(String commentText, String date, String userName, int likeNum) {
         this.commentText = commentText;
         this.date = date;
-        this.time = time;
-        this.userId = userId;
+        this.userName = userName;
+        this.likeNum = likeNum;
     }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "commentText='" + commentText + '\'' +
-                ", date='" + date + '\'' +
-                ", time='" + time + '\'' +
-                ", userId='" + userId + '\'' +
-                '}';
-    }
-
 }
 
 

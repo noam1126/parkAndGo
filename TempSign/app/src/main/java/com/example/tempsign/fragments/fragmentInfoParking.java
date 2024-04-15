@@ -1,4 +1,4 @@
-package com.example.tempsign;
+package com.example.tempsign.fragments;
 
 import android.content.Context;
 import android.os.Build;
@@ -11,9 +11,35 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.tempsign.R;
+import com.example.tempsign.adapters.CommentsAdapter;
+import com.example.tempsign.adapters.ParkingLotAdapter;
+import com.example.tempsign.models.Comment;
+import com.example.tempsign.models.ParkingLot;
+import com.example.tempsign.services.DataService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +56,12 @@ public class fragmentInfoParking extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private DatabaseReference mDatabase;
+
+    private ArrayList<Comment> dataSet; //המערך רשומות
+    private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager; //ההגדרות שלו (למעלה למטה\שמאל ימין)
+    private CommentsAdapter adapter;
 
     public fragmentInfoParking() {
         // Required empty public constructor
@@ -65,6 +97,7 @@ public class fragmentInfoParking extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_info_parking, container, false);
 
@@ -75,6 +108,21 @@ public class fragmentInfoParking extends Fragment {
             String number = arguments.getString("number");
             String disable = arguments.getString("disable");
             String id=arguments.getString("oid");
+
+        // Firebase reference to the comments node
+        DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(id).child("Comments");
+
+        // Build RecyclerView
+        dataSet = new ArrayList<>();
+        recyclerView = rootView.findViewById(R.id.resview2);
+        linearLayoutManager = new LinearLayoutManager(requireContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        // Initialize adapter with an empty dataset and the DatabaseReference
+        adapter = new CommentsAdapter(dataSet, commentsRef);
+        recyclerView.setAdapter(adapter);
+
 
             // Update UI elements
             TextView nameTextView = rootView.findViewById(R.id.textView);
@@ -96,8 +144,6 @@ public class fragmentInfoParking extends Fragment {
                 @Override
                 public void onClick(View v) {
                     showPopup(v,id); // Call the method to show the popup when the button is clicked
-                    //rootView.setVisibility(View.INVISIBLE);
-                    //rootView.setBackgroundTintMode();
                 }
             });
         }
@@ -124,16 +170,9 @@ public class fragmentInfoParking extends Fragment {
     private void showPopup(View view, String parkingLotId) {
         // Inflate the popup layout
         View popupView = LayoutInflater.from(getActivity()).inflate(R.layout.comment_popup, null);
-        //DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference().child("parkingLots").child(parkingLotId).child("comments");
+        DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(parkingLotId).child("Comments");
 
 
-
-//        // Create the popup window
-//        final PopupWindow popupWindow = new PopupWindow(
-//                popupView,
-//                ViewGroup.LayoutParams.WRAP_CONTENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT
-//        );
         // Create the popup window with larger width and height
         final PopupWindow popupWindow = new PopupWindow(
                 popupView,
@@ -150,20 +189,27 @@ public class fragmentInfoParking extends Fragment {
 
         // Accessing views inside the popup layout
         EditText editText = popupView.findViewById(R.id.editTextText);
-        //Button buttonAddPic = popupView.findViewById(R.id.buttonAddPic);
         Button buttonAddComment = popupView.findViewById(R.id.buttonAddComment);
         dimBehind(popupWindow);
-        // Example: Handling button click inside the popup
-       /* buttonAddComment.setOnClickListener(new View.OnClickListener() {
+
+        buttonAddComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Do something when the "Finish" button inside the popup is clicked
                 // For example, get the text from the EditText
-                String comment = editText.getText().toString();
+                String comment = editText.getText().toString().trim();
 
                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                String userName = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
                 // Get current timestamp
                 long timestamp = System.currentTimeMillis();
+                // Convert timestamp to Date object
+                Date date = new Date(timestamp);
+                // Create a SimpleDateFormat object with desired date and time format
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                // Format the Date object to get the date and time string
+                String formattedDateTime = sdf.format(date);
 
                 // Create a unique key for the comment
                 String commentId = commentsRef.push().getKey();
@@ -171,22 +217,25 @@ public class fragmentInfoParking extends Fragment {
                 // Create a map to store the comment data
                 Map<String, Object> commentMap = new HashMap<>();
                 commentMap.put("userId", userId);
+                commentMap.put("userName", userName);
                 commentMap.put("text", comment);
-                commentMap.put("timestamp", timestamp);
+                commentMap.put("timestamp", formattedDateTime); // Store formatted date and time
 
                 // Write the comment to Firebase
-                commentsRef.child(commentId).setValue(commentMap);
+                commentsRef.child(commentId).setValue(commentMap)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(getActivity(), "Comment added successfully", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getActivity(), "Failed to add comment", Toast.LENGTH_SHORT).show();
+                                }
 
-                // Then dismiss the popup window
-                popupWindow.dismiss();
+                                // Then dismiss the popup window
+                                popupWindow.dismiss();
+                            }
+                        });
             }
-        });*/
-    }
-
-
-    public void buttonShowComment(View view)
-    {
-
-    }
-
-}
+        });
+    }}

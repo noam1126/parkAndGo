@@ -105,12 +105,9 @@ public class fragmentParkingLot extends Fragment {
                 return true;
             }
         });
-
         return view;
-
     }
     private void filter(String query) {
-
         adapter.getFilter().filter(query);
     }
 }

@@ -22,7 +22,7 @@ public class DataService {
 
     public static ArrayList<ParkingLot> getArrParkingLots() {//נבנה את המערך מהAPI שלנו
 
-        String sURL="https://gisn.tel-aviv.gov.il/arcgis/rest/services/IView2/MapServer/556/query?where=1%3D1&outFields=name,address,num_vehicles,num_disabled&f=json";
+        String sURL="https://gisn.tel-aviv.gov.il/arcgis/rest/services/IView2/MapServer/556/query?where=1%3D1&outFields=name,address,num_vehicles,num_disabled,oid&f=json";
 
         StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();//2 שורות שמפה המערכת יוצרת לנו THEARD בודד ככה שכל דבר מתחת ל2 השורות יעבוד במקביל לאפליקיה שלנו
         StrictMode.setThreadPolicy(policy);
@@ -48,7 +48,7 @@ public class DataService {
                     String disablesNum = getStringValue(attributes, "num_disabled");
                     String parkingLotId = getStringValue(attributes, "oid");
 
-                    arrParkingLots.add(new ParkingLot("שם החניון: "+name,"כתובת: "+ address,"מספר חניות: "+ parksNum,"מספר חניות נכים: "+ disablesNum));//יצירת אובייקט של מדינה אחת עם הנתונים שלה
+                    arrParkingLots.add(new ParkingLot("שם החניון: "+name,"כתובת: "+ address,"מספר חניות: "+ parksNum,"מספר חניות נכים: "+ disablesNum,parkingLotId));//יצירת אובייקט של מדינה אחת עם הנתונים שלה
                 }
             }
 
