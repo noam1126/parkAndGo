@@ -5,21 +5,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -27,10 +23,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tempsign.R;
+import com.example.tempsign.adapters.CommentsAdapter;
+import com.example.tempsign.adapters.ParkingLotAdapter;
 import com.example.tempsign.models.Comment;
+import com.example.tempsign.models.ParkingLot;
+import com.example.tempsign.services.DataService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -61,6 +62,7 @@ public class fragmentInfoParking extends Fragment {
     private ArrayList<Comment> dataSet; //המערך רשומות
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager; //ההגדרות שלו (למעלה למטה\שמאל ימין)
+    private CommentsAdapter adapter;
 
     public fragmentInfoParking() {
         // Required empty public constructor
@@ -103,8 +105,8 @@ public class fragmentInfoParking extends Fragment {
         Button button = rootView.findViewById(R.id.clearButton);
         button.setOnClickListener(new View.OnClickListener() { //מה אני רוצה שיקרה כשלוחצת על הכפתור1
             @Override
-            public void onClick(View view) {
-                Navigation.findNavController(rootView).navigate(R.id.action_fragmentInfoParking_to_fragmentParkingLot);
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigate(R.id.action_fragmentInfoParking_to_fragmentParkingLot);
             }
         });
 
@@ -115,6 +117,20 @@ public class fragmentInfoParking extends Fragment {
             String number = arguments.getString("number");
             String disable = arguments.getString("disable");
             String id=arguments.getString("oid");
+
+        // Firebase reference to the comments node
+        DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(id).child("Comments");
+
+        // Build RecyclerView
+        dataSet = new ArrayList<>();
+        recyclerView = rootView.findViewById(R.id.resview2);
+        linearLayoutManager = new LinearLayoutManager(requireContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        // Initialize adapter with an empty dataset and the DatabaseReference
+        adapter = new CommentsAdapter(dataSet, commentsRef);
+        recyclerView.setAdapter(adapter);
 
 
             // Update UI elements
@@ -234,5 +250,4 @@ public class fragmentInfoParking extends Fragment {
                         });
             }
         });
-    }
-}
+    }}

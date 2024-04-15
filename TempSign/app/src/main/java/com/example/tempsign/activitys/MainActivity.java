@@ -23,22 +23,14 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
         fragmentContainerView = findViewById(R.id.fragmentContainerView);
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_top_navigation, menu);
-        return true;
-    }*/
 
     @Override
     public void navigateToInfoParking(View v) {
         Navigation.findNavController(v)
                 .navigate(R.id.action_global_fragmentInfoParking);
     }
+
+
 }
