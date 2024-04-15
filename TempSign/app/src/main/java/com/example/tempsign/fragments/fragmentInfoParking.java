@@ -178,6 +178,8 @@ public class fragmentInfoParking extends Fragment {
                 // For example, get the text from the EditText
                 String comment = editText.getText().toString().trim();
 
+                int numLike = 0;
+
                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 String userName = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
@@ -198,6 +200,7 @@ public class fragmentInfoParking extends Fragment {
                 commentMap.put("userId", userId);
                 commentMap.put("userName", userName);
                 commentMap.put("text", comment);
+                commentMap.put("numLike", numLike);
                 commentMap.put("timestamp", formattedDateTime); // Store formatted date and time
 
                 // Write the comment to Firebase
