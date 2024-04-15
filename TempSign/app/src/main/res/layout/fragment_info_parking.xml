@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/pagebkg"
     android:orientation="vertical"
-    android:paddingRight="10dp"
     tools:context=".fragments.fragmentInfoParking">
 
 
@@ -17,14 +16,13 @@
         android:paddingTop="15dp"
         app:icon="@drawable/baseline_clear_24"
         android:background="@android:color/transparent"
-        android:onClick="goBack"
-        app:iconSize="32dp" />
+        app:iconSize="32dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="50px"
-        android:layout_marginTop="25px"
+        android:layout_marginTop="50px"
         android:layout_marginRight="50px"
         android:layout_marginBottom="50px"
         android:background="@drawable/white_background"

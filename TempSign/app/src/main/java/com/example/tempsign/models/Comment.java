@@ -1,24 +1,25 @@
 package com.example.tempsign.models;
 
 public class Comment {
-    public String commentText;
-    public String date;
-    public String userName;
+    public String text;
+    public String timestamp;
     public int likeNum;
 
-    public String getCommentText() { return commentText; }
+    public String getText() { return text; }
 
-    public String getDate() { return date; }
+    public String getTimestamp() { return timestamp; }
 
-    public String getUserName() { return userName; }
 
     public int getLikeNum() { return likeNum; }
 
+    // Default constructor
+    public Comment() {
+        // Default constructor required for Firebase
+    }
 
-    public Comment(String commentText, String date, String userName, int likeNum) {
-        this.commentText = commentText;
-        this.date = date;
-        this.userName = userName;
+    public Comment(String text, String timestamp, int likeNum) {
+        this.text = text;
+        this.timestamp = timestamp;
         this.likeNum = likeNum;
     }
 }
