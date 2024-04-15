@@ -9,7 +9,11 @@
         android:id="@+id/fragmentInfoParking"
         android:name="com.example.tempsign.fragments.fragmentInfoParking"
         android:label="fragment_info_parking"
-        tools:layout="@layout/fragment_info_parking" />
+        tools:layout="@layout/fragment_info_parking" >
+        <action
+            android:id="@+id/action_fragmentInfoParking_to_fragmentParkingLot"
+            app:destination="@id/fragmentParkingLot" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragmentParkingLot"
