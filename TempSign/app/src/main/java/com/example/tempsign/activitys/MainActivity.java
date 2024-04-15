@@ -23,27 +23,16 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         fragmentContainerView = findViewById(R.id.fragmentContainerView);
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_top_navigation, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id=item.getItemId();
-        if(id==R.id.star){
-            Toast.makeText(this,"star",Toast.LENGTH_SHORT).show();
-        }
-        if(id==R.id.fav){
-            Toast.makeText(this,"heart",Toast.LENGTH_SHORT).show();
-        }
         return true;
     }
 
@@ -52,6 +41,5 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         Navigation.findNavController(v)
                 .navigate(R.id.action_global_fragmentInfoParking);
     }
-
 
 }

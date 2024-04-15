@@ -5,6 +5,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -13,8 +16,10 @@ import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -93,6 +98,11 @@ public class fragmentInfoParking extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_info_parking, container, false);
+
+        //Toolbar toolbar = requireActivity().findViewById(R.id.toolbar);
+        //toolbar.setNavigationIcon(R.drawable.baseline_clear_24); // Set your back button icon here
+        //toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
+        //toolbar.setVisibility(View.VISIBLE);
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -217,4 +227,10 @@ public class fragmentInfoParking extends Fragment {
                         });
             }
         });
-    }}
+    }
+
+
+    public void goBack(View view) {
+
+    }
+}
