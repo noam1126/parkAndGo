@@ -57,15 +57,17 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="commentNumLike" />
+                    android:text="0" />
 
-                <Switch
-                    android:id="@+id/switchLike"
+
+                <ImageView
+                    android:id="@+id/imageViewLike"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="32dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="like" />
+                    android:onClick="loveComment"
+                    android:src="@drawable/baseline_favorite_light24" />
 
             </LinearLayout>
         </LinearLayout>
