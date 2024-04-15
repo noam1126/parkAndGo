@@ -11,7 +11,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,15 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tempsign.R;
-import com.example.tempsign.adapters.CommentsAdapter;
-import com.example.tempsign.adapters.ParkingLotAdapter;
 import com.example.tempsign.models.Comment;
-import com.example.tempsign.models.ParkingLot;
-import com.example.tempsign.services.DataService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -61,7 +55,6 @@ public class fragmentInfoParking extends Fragment {
     private ArrayList<Comment> dataSet; //המערך רשומות
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager; //ההגדרות שלו (למעלה למטה\שמאל ימין)
-    private CommentsAdapter adapter;
 
     public fragmentInfoParking() {
         // Required empty public constructor
@@ -108,20 +101,6 @@ public class fragmentInfoParking extends Fragment {
             String number = arguments.getString("number");
             String disable = arguments.getString("disable");
             String id=arguments.getString("oid");
-
-        // Firebase reference to the comments node
-        DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(id).child("Comments");
-
-        // Build RecyclerView
-        dataSet = new ArrayList<>();
-        recyclerView = rootView.findViewById(R.id.resview2);
-        linearLayoutManager = new LinearLayoutManager(requireContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        // Initialize adapter with an empty dataset and the DatabaseReference
-        adapter = new CommentsAdapter(dataSet, commentsRef);
-        recyclerView.setAdapter(adapter);
 
 
             // Update UI elements
