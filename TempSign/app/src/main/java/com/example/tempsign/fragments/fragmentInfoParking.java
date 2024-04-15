@@ -21,6 +21,7 @@ import android.widget.Toolbar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -99,10 +100,13 @@ public class fragmentInfoParking extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_info_parking, container, false);
 
-        //Toolbar toolbar = requireActivity().findViewById(R.id.toolbar);
-        //toolbar.setNavigationIcon(R.drawable.baseline_clear_24); // Set your back button icon here
-        //toolbar.setNavigationOnClickListener(v -> requireActivity().onBackPressed());
-        //toolbar.setVisibility(View.VISIBLE);
+        Button button = rootView.findViewById(R.id.clearButton);
+        button.setOnClickListener(new View.OnClickListener() { //מה אני רוצה שיקרה כשלוחצת על הכפתור1
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(rootView).navigate(R.id.action_fragmentInfoParking_to_fragmentParkingLot);
+            }
+        });
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -230,10 +234,5 @@ public class fragmentInfoParking extends Fragment {
                         });
             }
         });
-    }
-
-
-    public void goBack(View view) {
-
     }
 }

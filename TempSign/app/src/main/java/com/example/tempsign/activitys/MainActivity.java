@@ -29,17 +29,16 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
         fragmentContainerView = findViewById(R.id.fragmentContainerView);
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_top_navigation, menu);
         return true;
-    }
+    }*/
 
     @Override
     public void navigateToInfoParking(View v) {
         Navigation.findNavController(v)
                 .navigate(R.id.action_global_fragmentInfoParking);
     }
-
 }
