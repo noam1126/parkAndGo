@@ -26,15 +26,14 @@ import java.util.List;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyViewHolder> {
 
-    static ArrayList<Comment> dataset;
+    static ArrayList<Comment> comments;
     private DatabaseReference commentsRef;
     private ValueEventListener commentsListener;
 
-
-
-    public CommentsAdapter(ArrayList<Comment> dataSet,DatabaseReference commentsRef) {
-        this.dataset = dataSet;
+    public CommentsAdapter(ArrayList<Comment> comments, DatabaseReference commentsRef) {
+        this.comments = comments;
         this.commentsRef = commentsRef;
+
         // Start listening for changes in Firebase
         listenForComments();
     }
@@ -45,11 +44,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Clear existing dataset
-                dataset.clear();
+                comments.clear();
                 // Iterate through the dataSnapshot to fetch comments
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Comment comment = snapshot.getValue(Comment.class);
-                    dataset.add(comment);
+                    comments.add(comment);
                 }
                 // Notify adapter of data changes
                 notifyDataSetChanged();
@@ -72,8 +71,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) { //יוצר אצ הקארד
-
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Assuming parent is a ViewGroup or a View object
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_comments, parent, false);
         MyViewHolder myViewHolder = new MyViewHolder(view);
@@ -82,44 +80,38 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) { //עוברים על תאי המערך ומשבצים על גבי הרשומות
-        if (dataset.isEmpty()) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        if (comments.isEmpty()) {
             // Display placeholder or message when dataset is empty
             holder.textContent.setText("No comments available");
-            holder.textUserName.setText("");
             holder.textDate.setText("");
             holder.textNumLike.setText("");
         } else {
-        Comment comment = dataset.get(position);
-        holder.textContent.setText(comment.getCommentText());
-        holder.textUserName.setText(comment.getUserName());
-        holder.textDate.setText(comment.getDate());
-        holder.textNumLike.setText(String.valueOf(comment.getLikeNum()));
-    }
+            Comment comment = comments.get(position);
+            holder.textContent.setText(comment.getText());
+            holder.textDate.setText(comment.getTimestamp());
+            holder.textNumLike.setText(String.valueOf(comment.getLikeNum()));
+        }
     }
 
     @Override
     public int getItemCount() {
-
-        return dataset.size();
+        return comments.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView textContent;
-        TextView textUserName;
         TextView textDate;
         TextView textNumLike;
 
-        public MyViewHolder(@NonNull View itemView) { //תוכן הקארד
+        public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textContent = itemView.findViewById(R.id.commentContent);
-            textUserName = itemView.findViewById(R.id.commentUserName);
             textDate = itemView.findViewById(R.id.commentDate);
             textNumLike = itemView.findViewById(R.id.commentNumLikes);
 
         }
     }
 }
-

@@ -30,7 +30,6 @@ public class ParkingLot {
     }
 
 
-
     public ParkingLot(String name, String address, String numOfParks, String numOfDisabled,String parkId) {
         this.name = name;
         this.address = address;

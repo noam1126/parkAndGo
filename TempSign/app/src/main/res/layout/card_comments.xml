@@ -34,15 +34,6 @@
             android:paddingBottom="10dp"
             android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/commentUserName"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="commentUserName"
-                android:paddingBottom="10dp"
-                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/commentDate"
