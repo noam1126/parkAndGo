@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ParkingLotAdapter extends RecyclerView.Adapter<ParkingLotAdapter.MyViewHolder> {
 
-    ArrayList<ParkingLot> dataset;
+    static ArrayList<ParkingLot> dataset;
     static ArrayList<ParkingLot> datasetFull; // Backup of the original dataset for filtering
 
 
@@ -74,6 +74,8 @@ public class ParkingLotAdapter extends RecyclerView.Adapter<ParkingLotAdapter.My
             button.setOnClickListener(new View.OnClickListener() { //מה אני רוצה שיקרה כשלוחצת על הכפתור1
                 @Override
                 public void onClick(View v) {
+                    String parkId = dataset.get(getAdapterPosition()).getParkId();
+
                     Bundle bundle = new Bundle();
                     String valueName = textName.getText().toString();
                     String valueAdress = textAdress.getText().toString();
@@ -84,13 +86,12 @@ public class ParkingLotAdapter extends RecyclerView.Adapter<ParkingLotAdapter.My
                     bundle.putString("address", valueAdress);
                     bundle.putString("number", valueNum);
                     bundle.putString("disable", valueDisable);
+                    bundle.putString("oid", parkId);
                     Navigation.findNavController(itemView).navigate(R.id.action_global_fragmentInfoParking,bundle);
                 }
             });
         }
     }
-
-
 
     public Filter getFilter() {
         return new Filter() {

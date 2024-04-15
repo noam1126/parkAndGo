@@ -25,18 +25,20 @@ public class ParkingLot {
         return numOfDisabled;
     }
 
-    public ParkingLot(String name, String address, String numOfParks, String numOfDisabled) {
-        this.name = name;
-        this.address = address;
-        this.numOfParks = numOfParks;
-        this.numOfDisabled = numOfDisabled;
-    }
-
     public String getParkId() {
         return parkId;
     }
 
-    public void setParkId(String parkId) {
+
+
+    public ParkingLot(String name, String address, String numOfParks, String numOfDisabled,String parkId) {
+        this.name = name;
+        this.address = address;
+        this.numOfParks = numOfParks;
+        this.numOfDisabled = numOfDisabled;
         this.parkId = parkId;
     }
+
+
 }
+
