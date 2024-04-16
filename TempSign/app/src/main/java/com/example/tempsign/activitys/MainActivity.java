@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,10 @@ import com.example.tempsign.R;
 
 public class MainActivity extends AppCompatActivity implements NavigationListener{
     private FragmentContainerView fragmentContainerView;
+
+    // omer
+    private boolean isLiked = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,4 +38,16 @@ public class MainActivity extends AppCompatActivity implements NavigationListene
     }
 
 
+    // omer
+    public void loveComment(View view) {
+        ImageView imageViewLike = (ImageView) view;
+
+        if (isLiked) {
+            imageViewLike.setImageResource(R.drawable.baseline_favorite_light24);
+        } else {
+            imageViewLike.setImageResource(R.drawable.baseline_favorite_24);
+        }
+
+        isLiked = !isLiked;
+    }
 }
