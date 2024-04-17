@@ -32,8 +32,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -155,9 +158,38 @@ public class fragmentInfoParking extends Fragment {
                     showPopup(v,id); // Call the method to show the popup when the button is clicked
                 }
             });
+
+            DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(id).child("Comments");
+
+            Button likeButton = rootView.findViewById(R.id.likeButton);
+
+            likeButton.setOnClickListener(view -> {
+                databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        ArrayList<String> arrayList = dataSnapshot.getValue(ArrayList.class);
+                        if (arrayList == null) {
+                            arrayList = new ArrayList<>();
+                        }
+                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        arrayList.add(userId);
+                        databaseRef.setValue(arrayList);
+
+                        int likeNum=dataSnapshot.getValue(Integer.class)+1;
+                        databaseRef.setValue(likeNum);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle possible errors
+                    }
+                });
+            });
         }
+
         return rootView;
     }
+
     public static void dimBehind(PopupWindow popupWindow) {
         View container;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -180,7 +212,6 @@ public class fragmentInfoParking extends Fragment {
         // Inflate the popup layout
         View popupView = LayoutInflater.from(getActivity()).inflate(R.layout.comment_popup, null);
         DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(parkingLotId).child("Comments");
-
 
         // Create the popup window with larger width and height
         final PopupWindow popupWindow = new PopupWindow(
@@ -213,6 +244,8 @@ public class fragmentInfoParking extends Fragment {
                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 String userName = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
+                ArrayList<String> likesByUser = new ArrayList<String>();
+
                 // Get current timestamp
                 long timestamp = System.currentTimeMillis();
                 // Convert timestamp to Date object
@@ -231,6 +264,7 @@ public class fragmentInfoParking extends Fragment {
                 commentMap.put("userName", userName);
                 commentMap.put("text", comment);
                 commentMap.put("numLike", numLike);
+                commentMap.put("likesByUser", likesByUser);
                 commentMap.put("timestamp", formattedDateTime); // Store formatted date and time
 
                 // Write the comment to Firebase

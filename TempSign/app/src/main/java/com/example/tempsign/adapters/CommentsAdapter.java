@@ -111,8 +111,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
             textContent = itemView.findViewById(R.id.commentContent);
             textDate = itemView.findViewById(R.id.commentDate);
             textNumLike = itemView.findViewById(R.id.commentNumLikes);
-
-
         }
     }
 }
