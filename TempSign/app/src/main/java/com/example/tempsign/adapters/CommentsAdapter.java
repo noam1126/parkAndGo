@@ -1,5 +1,6 @@
 package com.example.tempsign.adapters;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tempsign.R;
 import com.example.tempsign.models.Comment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyViewHolder> {
 
@@ -92,6 +99,51 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
             holder.textDate.setText(comment.getTimestamp());
             holder.textNumLike.setText(String.valueOf(comment.getLikeNum()));
         }
+
+
+        Button likeButton = holder.itemView.findViewById(R.id.likeButton);
+        Comment comment = comments.get(position);
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String commentId= comment.getCommentId();
+
+
+        // Update button text or visual state based on likes (optional)
+        /*if (comment.getLikesId().contains(currentUserId)) {
+            likeButton.setBackgroundColor(Color.RED); // Or change button color to indicate "liked" state
+        } else {
+            likeButton.setBackgroundColor(Color.GRAY);
+        }*/
+
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Update Firebase database with the user's ID under the appropriate node
+                DatabaseReference commentRef = commentsRef.child(commentId);
+                DatabaseReference likesRef = commentRef.child("likes");
+                likesRef.child(currentUserId).setValue(true); // You can set any value, for example, true
+
+                // Update the number of likes for the comment
+                commentRef.child("numLike").setValue(ServerValue.increment(1));
+
+
+
+                                    // Check if user already liked
+                /*if (!comment.getLikesId().contains(currentUserId)) {
+                    comment.getLikesId().add(currentUserId);
+                    comment.setLikeNum(comment.getLikeNum() + 1);
+
+
+                    // Update comment data in Firebase (two separate updates)
+                    commentsRef.child(comment.getCommentId()).child("likesId").setValue(comment.getLikesId());
+                    commentsRef.child(comment.getCommentId()).child("likeNum").setValue(comment.getLikeNum());
+
+                    // Update adapter data and UI
+                    notifyItemChanged(position); // Notify adapter about data change
+                } else {
+                    // Handle case where user tries to like their own comment or already liked comment (optional)
+                }*/
+            }
+        });
     }
 
     @Override

@@ -60,14 +60,15 @@
                     android:text="0" />
 
 
-                <ImageView
-                    android:id="@+id/imageViewLike"
-                    android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:onClick="loveComment"
-                    android:src="@drawable/baseline_favorite_light24"/>
+                <Button
+                    android:id="@+id/likeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:paddingTop="15dp"
+                    app:icon="@drawable/baseline_favorite_light24"
+                    app:iconSize="32dp"
+                    app:iconTint="#8692F7" />
 
             </LinearLayout>
         </LinearLayout>
