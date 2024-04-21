@@ -227,7 +227,7 @@ public class fragmentInfoParking extends Fragment {
 
                 // Create a unique key for the comment
                 String commentId = commentsRef.push().getKey();
-                Comment newComment = new Comment(commentId,comment, formattedDateTime, numLike, userId,userName);// Initialize likeNum as 0
+                Comment newComment = new Comment(commentId,comment, formattedDateTime, numLike, userId,userName);
                 commentsRef.child(commentId).setValue(newComment)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
