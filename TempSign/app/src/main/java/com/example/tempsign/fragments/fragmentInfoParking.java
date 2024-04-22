@@ -3,6 +3,7 @@ package com.example.tempsign.fragments;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +65,7 @@ public class fragmentInfoParking extends Fragment {
     private LinearLayoutManager linearLayoutManager; //ההגדרות שלו (למעלה למטה\שמאל ימין)
     private CommentsAdapter adapter;
 
+
     public fragmentInfoParking() {
         // Required empty public constructor
     }
@@ -116,21 +118,21 @@ public class fragmentInfoParking extends Fragment {
             String address = arguments.getString("address");
             String number = arguments.getString("number");
             String disable = arguments.getString("disable");
-            String id=arguments.getString("oid");
+            String id = arguments.getString("oid");
 
-        // Firebase reference to the comments node
-        DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(id).child("Comments");
+            // Firebase reference to the comments node
+            DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(id).child("Comments");
 
-        // Build RecyclerView
-        dataSet = new ArrayList<>();
-        recyclerView = rootView.findViewById(R.id.resview2);
-        linearLayoutManager = new LinearLayoutManager(requireContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+            // Build RecyclerView
+            dataSet = new ArrayList<>();
+            recyclerView = rootView.findViewById(R.id.resview2);
+            linearLayoutManager = new LinearLayoutManager(requireContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        // Initialize adapter with an empty dataset and the DatabaseReference
-        adapter = new CommentsAdapter(dataSet, commentsRef);
-        recyclerView.setAdapter(adapter);
+            // Initialize adapter with an empty dataset and the DatabaseReference
+            adapter = new CommentsAdapter(dataSet, commentsRef);
+            recyclerView.setAdapter(adapter);
 
 
             // Update UI elements
@@ -152,15 +154,16 @@ public class fragmentInfoParking extends Fragment {
             buttonShowComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showPopup(v,id); // Call the method to show the popup when the button is clicked
+                    showPopup(v, id); // Call the method to show the popup when the button is clicked
                 }
             });
         }
         return rootView;
     }
+
     public static void dimBehind(PopupWindow popupWindow) {
         View container;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             container = (View) popupWindow.getContentView().getParent();
         } else {
             container = popupWindow.getContentView();
@@ -224,17 +227,40 @@ public class fragmentInfoParking extends Fragment {
 
                 // Create a unique key for the comment
                 String commentId = commentsRef.push().getKey();
+                Comment newComment = new Comment(commentId,comment, formattedDateTime, numLike, userId,userName);
+                commentsRef.child(commentId).setValue(newComment)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(getActivity(), "Comment added successfully", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getActivity(), "Failed to add comment", Toast.LENGTH_SHORT).show();
+                                }
 
-                // Create a map to store the comment data
-                Map<String, Object> commentMap = new HashMap<>();
+                                // Then dismiss the popup window
+                                popupWindow.dismiss();
+                            }
+                            //Comment newComment = new Comment(); // Use default constructor
+                            //newComment.setCommentId(commentId);
+
+                            // Initialize likes array
+                            //ArrayList<String> likesId = new ArrayList<>();
+                            //newComment.setLikesId(likesId); // Add empty likes array to Comment object
+
+
+                            // Create a map to store the comment data
+               /* Map<String, Object> commentMap = new HashMap<>();
                 commentMap.put("userId", userId);
                 commentMap.put("userName", userName);
                 commentMap.put("text", comment);
                 commentMap.put("numLike", numLike);
+                //commentMap.put("likes", likesId);
                 commentMap.put("timestamp", formattedDateTime); // Store formatted date and time
+*/
 
-                // Write the comment to Firebase
-                commentsRef.child(commentId).setValue(commentMap)
+                            // Write the comment to Firebase
+                /*commentsRef.child(commentId).setValue(commentMap)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -248,6 +274,9 @@ public class fragmentInfoParking extends Fragment {
                                 popupWindow.dismiss();
                             }
                         });
+            }*/
+                        });
             }
         });
-    }}
+    }
+}
