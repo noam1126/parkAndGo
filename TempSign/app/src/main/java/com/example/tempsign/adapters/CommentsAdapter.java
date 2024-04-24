@@ -101,7 +101,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
             Comment comment = comments.get(position);
             holder.textContent.setText(comment.getText());
             holder.textDate.setText(comment.getTimestamp());
-            holder.textNumLike.setText(String.valueOf(comment.getLikeNum()));
+            holder.textNumLike.setText(String.valueOf(comment.getNumLike()));
         }
 
 
