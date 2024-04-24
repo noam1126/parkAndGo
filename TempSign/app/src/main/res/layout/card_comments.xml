@@ -68,9 +68,7 @@
                     android:paddingTop="15dp"
                     app:icon="@drawable/baseline_favorite_light24"
                     app:iconSize="32dp"
-                    android:onClick="clickedLikeButton"
-                    app:iconTint="#8692f7" />
-
+                    app:iconTint="#8692F7" />
 
             </LinearLayout>
         </LinearLayout>

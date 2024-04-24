@@ -1,15 +1,11 @@
 package com.example.tempsign.fragments;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import androidx.core.widget.ImageViewCompat;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -19,12 +15,8 @@ import android.widget.PopupWindow;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ImageButton;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.widget.ImageViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -32,7 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tempsign.R;
-import com.example.tempsign.activitys.MainActivity;
 import com.example.tempsign.adapters.CommentsAdapter;
 import com.example.tempsign.adapters.ParkingLotAdapter;
 import com.example.tempsign.models.Comment;
@@ -42,11 +33,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -76,6 +64,7 @@ public class fragmentInfoParking extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager; //ההגדרות שלו (למעלה למטה\שמאל ימין)
     private CommentsAdapter adapter;
+
 
     public fragmentInfoParking() {
         // Required empty public constructor
@@ -169,7 +158,6 @@ public class fragmentInfoParking extends Fragment {
                 }
             });
         }
-
         return rootView;
     }
 
@@ -195,6 +183,7 @@ public class fragmentInfoParking extends Fragment {
         // Inflate the popup layout
         View popupView = LayoutInflater.from(getActivity()).inflate(R.layout.comment_popup, null);
         DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(parkingLotId).child("Comments");
+
 
         // Create the popup window with larger width and height
         final PopupWindow popupWindow = new PopupWindow(
@@ -227,8 +216,6 @@ public class fragmentInfoParking extends Fragment {
                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 String userName = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-                String likesByUser = "";
-
                 // Get current timestamp
                 long timestamp = System.currentTimeMillis();
                 // Convert timestamp to Date object
@@ -240,18 +227,40 @@ public class fragmentInfoParking extends Fragment {
 
                 // Create a unique key for the comment
                 String commentId = commentsRef.push().getKey();
+                Comment newComment = new Comment(commentId,comment, formattedDateTime, numLike, userId,userName);
+                commentsRef.child(commentId).setValue(newComment)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(getActivity(), "Comment added successfully", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getActivity(), "Failed to add comment", Toast.LENGTH_SHORT).show();
+                                }
 
-                // Create a map to store the comment data
-                Map<String, Object> commentMap = new HashMap<>();
+                                // Then dismiss the popup window
+                                popupWindow.dismiss();
+                            }
+                            //Comment newComment = new Comment(); // Use default constructor
+                            //newComment.setCommentId(commentId);
+
+                            // Initialize likes array
+                            //ArrayList<String> likesId = new ArrayList<>();
+                            //newComment.setLikesId(likesId); // Add empty likes array to Comment object
+
+
+                            // Create a map to store the comment data
+               /* Map<String, Object> commentMap = new HashMap<>();
                 commentMap.put("userId", userId);
                 commentMap.put("userName", userName);
                 commentMap.put("text", comment);
                 commentMap.put("numLike", numLike);
-                //commentMap.put("likesByUser", likesByUser);
+                //commentMap.put("likes", likesId);
                 commentMap.put("timestamp", formattedDateTime); // Store formatted date and time
+*/
 
-                // Write the comment to Firebase
-                commentsRef.child(commentId).setValue(commentMap)
+                            // Write the comment to Firebase
+                /*commentsRef.child(commentId).setValue(commentMap)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -265,20 +274,9 @@ public class fragmentInfoParking extends Fragment {
                                 popupWindow.dismiss();
                             }
                         });
+            }*/
+                        });
             }
         });
-    }
-    public void clickedLikeButton(View view){
-
-        Bundle arguments = getArguments();
-        String id = arguments.getString("oid");
-
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(id).child("Comments");
-
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        databaseRef.child("likesByUser").setValue(userId);
-
-        //int likeNum=dataSnapshot.getValue(Integer.class)+1;
-        //databaseRef.child("numLike").setValue(likeNum);
     }
 }

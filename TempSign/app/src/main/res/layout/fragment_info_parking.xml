@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/pagebkg"
     android:orientation="vertical"
     tools:context=".fragments.fragmentInfoParking">
+
 
     <Button
         android:id="@+id/clearButton"
@@ -22,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="50px"
+        android:layout_marginTop="50px"
         android:layout_marginRight="50px"
         android:layout_marginBottom="50px"
         android:background="@drawable/white_background"
@@ -94,7 +95,7 @@
             android:layout_marginTop="30px"
             android:layout_marginRight="30px"
             android:onClick="buttonShowComment"
-            android:text="new comment" />
+            android:text="Add Comment" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -103,7 +104,4 @@
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
-    <include
-        layout="@layout/card_comments"
-        android:visibility="gone" />
 </LinearLayout>

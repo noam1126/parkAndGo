@@ -1,5 +1,10 @@
 package com.example.tempsign.adapters;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +19,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tempsign.R;
 import com.example.tempsign.models.Comment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyViewHolder> {
 
@@ -91,6 +102,84 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
             holder.textContent.setText(comment.getText());
             holder.textDate.setText(comment.getTimestamp());
             holder.textNumLike.setText(String.valueOf(comment.getLikeNum()));
+        }
+
+
+        Button likeButton = holder.itemView.findViewById(R.id.likeButton);
+        Comment comment = comments.get(position);
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String commentId= comment.getCommentId();
+
+        if (commentId != null) {
+            DatabaseReference likesRef = commentsRef.child(commentId).child("likesId");
+            likesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.hasChild(currentUserId)) {
+                        setButtonIconTint(likeButton, Color.RED);
+                    } else {
+                        setButtonIconTint(likeButton, R.color.lavender); // Change to your desired default color
+                    }
+                }
+
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle error
+                }
+            });
+        }
+
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // Update Firebase database with the user's ID under the appropriate node
+                DatabaseReference commentRef = commentsRef.child(commentId);
+                DatabaseReference likesRef = commentRef.child("likesId");
+                //likesRef.child(currentUserId).setValue(true); // You can set any value, for example, true
+
+                // Update the number of likes for the comment
+                //commentRef.child("numLike").setValue(ServerValue.increment(1));
+                //notifyItemChanged(position);
+
+                likesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.hasChild(currentUserId)) {
+                            // User has already liked the comment, so remove their like
+                            likesRef.child(currentUserId).removeValue();
+
+                            // Decrement the number of likes for the comment
+                            commentRef.child("numLike").setValue(ServerValue.increment(-1));
+
+                        } else {
+                            // User has not liked the comment, so add their like
+                            likesRef.child(currentUserId).setValue(true);
+
+                            // Increment the number of likes for the comment
+                            commentRef.child("numLike").setValue(ServerValue.increment(1));
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Handle error
+                    }
+                });
+
+                // Notify the adapter that the item at the current position has changed
+                notifyItemChanged(position);
+            }
+        });
+    }
+
+    // Method to set the icon tint of a button
+    private void setButtonIconTint(Button button, int color) {
+        Drawable drawable = button.getCompoundDrawablesRelative()[0]; // Assuming the icon is the left drawable
+        if (drawable != null) {
+            drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
         }
     }
 
