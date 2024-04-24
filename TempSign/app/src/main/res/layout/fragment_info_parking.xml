@@ -94,7 +94,7 @@
             android:layout_marginTop="30px"
             android:layout_marginRight="30px"
             android:onClick="buttonShowComment"
-            android:text="buttonAddComment" />
+            android:text="new comment" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

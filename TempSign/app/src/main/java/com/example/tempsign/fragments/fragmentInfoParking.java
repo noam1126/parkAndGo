@@ -1,10 +1,15 @@
 package com.example.tempsign.fragments;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import androidx.core.widget.ImageViewCompat;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -14,8 +19,12 @@ import android.widget.PopupWindow;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.widget.ImageButton;
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.widget.ImageViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -23,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tempsign.R;
+import com.example.tempsign.activitys.MainActivity;
 import com.example.tempsign.adapters.CommentsAdapter;
 import com.example.tempsign.adapters.ParkingLotAdapter;
 import com.example.tempsign.models.Comment;
@@ -119,21 +129,21 @@ public class fragmentInfoParking extends Fragment {
             String address = arguments.getString("address");
             String number = arguments.getString("number");
             String disable = arguments.getString("disable");
-            String id=arguments.getString("oid");
+            String id = arguments.getString("oid");
 
-        // Firebase reference to the comments node
-        DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(id).child("Comments");
+            // Firebase reference to the comments node
+            DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(id).child("Comments");
 
-        // Build RecyclerView
-        dataSet = new ArrayList<>();
-        recyclerView = rootView.findViewById(R.id.resview2);
-        linearLayoutManager = new LinearLayoutManager(requireContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+            // Build RecyclerView
+            dataSet = new ArrayList<>();
+            recyclerView = rootView.findViewById(R.id.resview2);
+            linearLayoutManager = new LinearLayoutManager(requireContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        // Initialize adapter with an empty dataset and the DatabaseReference
-        adapter = new CommentsAdapter(dataSet, commentsRef);
-        recyclerView.setAdapter(adapter);
+            // Initialize adapter with an empty dataset and the DatabaseReference
+            adapter = new CommentsAdapter(dataSet, commentsRef);
+            recyclerView.setAdapter(adapter);
 
 
             // Update UI elements
@@ -155,35 +165,8 @@ public class fragmentInfoParking extends Fragment {
             buttonShowComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showPopup(v,id); // Call the method to show the popup when the button is clicked
+                    showPopup(v, id); // Call the method to show the popup when the button is clicked
                 }
-            });
-
-            DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(id).child("Comments");
-
-            Button likeButton = rootView.findViewById(R.id.likeButton);
-
-            likeButton.setOnClickListener(view -> {
-                databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        ArrayList<String> arrayList = dataSnapshot.getValue(ArrayList.class);
-                        if (arrayList == null) {
-                            arrayList = new ArrayList<>();
-                        }
-                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        arrayList.add(userId);
-                        databaseRef.setValue(arrayList);
-
-                        int likeNum=dataSnapshot.getValue(Integer.class)+1;
-                        databaseRef.setValue(likeNum);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Handle possible errors
-                    }
-                });
             });
         }
 
@@ -192,7 +175,7 @@ public class fragmentInfoParking extends Fragment {
 
     public static void dimBehind(PopupWindow popupWindow) {
         View container;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             container = (View) popupWindow.getContentView().getParent();
         } else {
             container = popupWindow.getContentView();
@@ -244,7 +227,7 @@ public class fragmentInfoParking extends Fragment {
                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 String userName = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
-                ArrayList<String> likesByUser = new ArrayList<String>();
+                String likesByUser = "";
 
                 // Get current timestamp
                 long timestamp = System.currentTimeMillis();
@@ -264,7 +247,7 @@ public class fragmentInfoParking extends Fragment {
                 commentMap.put("userName", userName);
                 commentMap.put("text", comment);
                 commentMap.put("numLike", numLike);
-                commentMap.put("likesByUser", likesByUser);
+                //commentMap.put("likesByUser", likesByUser);
                 commentMap.put("timestamp", formattedDateTime); // Store formatted date and time
 
                 // Write the comment to Firebase
@@ -284,4 +267,18 @@ public class fragmentInfoParking extends Fragment {
                         });
             }
         });
-    }}
+    }
+    public void clickedLikeButton(View view){
+
+        Bundle arguments = getArguments();
+        String id = arguments.getString("oid");
+
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference().child("ParkingLots").child(id).child("Comments");
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        databaseRef.child("likesByUser").setValue(userId);
+
+        //int likeNum=dataSnapshot.getValue(Integer.class)+1;
+        //databaseRef.child("numLike").setValue(likeNum);
+    }
+}
