@@ -24,7 +24,7 @@ public class Comment {
     public String getTimestamp() { return timestamp; }
 
 
-    public int getLikeNum() { return numLike; }
+    public int getNumLike() { return numLike; }
 
     // Default constructor
     public Comment() {
